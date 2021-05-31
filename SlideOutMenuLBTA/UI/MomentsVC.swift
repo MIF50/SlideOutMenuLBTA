@@ -11,7 +11,10 @@ class MomentsVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .brown
+        view.backgroundColor = .white
+        navigationItem.title = "Moment"
+        navigationItem.largeTitleDisplayMode = .always
+        
     }
 }
 

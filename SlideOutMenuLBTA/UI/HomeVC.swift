@@ -28,18 +28,21 @@ class HomeVC: UIViewController {
     }
     
     @objc private func didTapOpen() {
-      
+        let mainWindow = UIApplication.shared.windows.filter { $0.isKeyWindow }.first
+        let baseSlidingVC = mainWindow?.rootViewController as? BaseSlidingVC
+        baseSlidingVC?.openMenu()
     }
     
     @objc private func didTapHide() {
-        
+        let mainWindow = UIApplication.shared.windows.filter { $0.isKeyWindow }.first
+        let baseSlidingVC = mainWindow?.rootViewController as? BaseSlidingVC
+        baseSlidingVC?.hideMenu()
     }
     
     // MARK:- Private Method
     fileprivate func configureTableView() {
         view.addSubview(tableView)
         tableView.fillSuperview()
-        tableView.backgroundColor = .red
         handler.setup(tableView)
     }
     

@@ -31,26 +31,31 @@ class BaseSlidingVC: UIViewController {
     private let darkCoverView : DarkCoverView = {
         let view = DarkCoverView()
         view.alpha = 0
-        view.isUserInteractionEnabled = false
         view.backgroundColor = UIColor.init(white: 0, alpha: 0.7)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     // MARK:- SlideMenu
-    fileprivate var leadingAnchorRedView: NSLayoutConstraint!
+    fileprivate var leadingAnchorRightView: NSLayoutConstraint!
+    fileprivate var trailingAnchorRightView: NSLayoutConstraint!
     fileprivate var isMenuOpen = false
     fileprivate let menuWidth:CGFloat = 300
     fileprivate let thresholdVelocity:CGFloat = 500
     
-    fileprivate var rightViewController: UIViewController?
+    fileprivate var rightViewController: UIViewController = UINavigationController(rootViewController: HomeVC())
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .yellow
+        view.backgroundColor = .white
         configureView()
-        configurePanGesture()
         configureViewControllers()
+        configurePanGesture()
+        configureTapGesture()
+    }
+    
+    @objc private func didTapDismiss() {
+        hideMenu()
     }
     
     @objc private func handlePane(gesture: UIPanGestureRecognizer) {
@@ -60,7 +65,8 @@ class BaseSlidingVC: UIViewController {
         x = min(x, menuWidth)
         x = max(0,x)
         
-        leadingAnchorRedView.constant = x
+        leadingAnchorRightView.constant = x
+        trailingAnchorRightView.constant = x
         darkCoverView.alpha = x / menuWidth
         if gesture.state == .ended {
             handleEnd(gesture)
@@ -94,33 +100,36 @@ class BaseSlidingVC: UIViewController {
         }
     }
     
-    private func openMenu() {
+    func openMenu() {
         isMenuOpen = true
-        leadingAnchorRedView.constant = menuWidth
+        leadingAnchorRightView.constant = menuWidth
+        trailingAnchorRightView.constant = menuWidth
         performAnimations()
     }
     
-    private func hideMenu() {
+    func hideMenu() {
         isMenuOpen = false
-        leadingAnchorRedView.constant = 0
+        leadingAnchorRightView.constant = 0
+        trailingAnchorRightView.constant = 0
         performAnimations()
     }
     
     func didSelectMenuItem(at indexPath: IndexPath,vc: UIViewController?) {
         performRightViewCleanUp()
+        hideMenu()
         
         if let vc = vc {
-            rightContainerView.addSubview(vc.view)
-            addChild(vc)
             rightViewController = vc
+            rightContainerView.addSubview(rightViewController.view)
+            addChild(rightViewController)
+            
         }
         rightContainerView.bringSubviewToFront(darkCoverView)
-        hideMenu()
     }
     
     private func performRightViewCleanUp() {
-        rightViewController?.view.removeFromSuperview()
-        rightViewController?.removeFromParent()
+        rightViewController.view.removeFromSuperview()
+        rightViewController.removeFromParent()
     }
     
     fileprivate func performAnimations() {
@@ -142,7 +151,6 @@ class BaseSlidingVC: UIViewController {
         
         NSLayoutConstraint.activate([
             rightContainerView.topAnchor.constraint(equalTo: view.topAnchor),
-            rightContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             rightContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             menuContainerView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -151,8 +159,10 @@ class BaseSlidingVC: UIViewController {
             menuContainerView.bottomAnchor.constraint(equalTo: rightContainerView.bottomAnchor)
             
         ])
-        leadingAnchorRedView = rightContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 0)
-        leadingAnchorRedView.isActive = true
+        leadingAnchorRightView = rightContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 0)
+        leadingAnchorRightView.isActive = true
+        trailingAnchorRightView = rightContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        trailingAnchorRightView.isActive = true
     }
     
     fileprivate func configurePanGesture() {
@@ -160,38 +170,43 @@ class BaseSlidingVC: UIViewController {
         view.addGestureRecognizer(panGesture)
     }
     
+    fileprivate func configureTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapDismiss))
+        darkCoverView.addGestureRecognizer(tapGesture)
+    }
+    
     fileprivate func configureViewControllers() {
-        rightViewController = HomeVC()
         let menuVC = MenuVC()
         
-        let homeView = rightViewController!.view!
+        let homeView = rightViewController.view!
         let menuView = menuVC.view!
-        
-        homeView.translatesAutoresizingMaskIntoConstraints = false
-        menuView.translatesAutoresizingMaskIntoConstraints = false
-        
+                
         rightContainerView.addSubview(homeView)
-        rightContainerView.addSubview(darkCoverView)
         menuContainerView.addSubview(menuView)
+        rightContainerView.addSubview(darkCoverView)
+
+        homeView.anchor(
+            top: rightContainerView.topAnchor,
+            leading: rightContainerView.leadingAnchor,
+            bottom: rightContainerView.bottomAnchor,
+            trailing: rightContainerView.trailingAnchor
+        )
         
-        NSLayoutConstraint.activate([
-            homeView.topAnchor.constraint(equalTo: rightContainerView.topAnchor),
-            homeView.leadingAnchor.constraint(equalTo: rightContainerView.leadingAnchor),
-            homeView.bottomAnchor.constraint(equalTo: rightContainerView.bottomAnchor),
-            homeView.trailingAnchor.constraint(equalTo: rightContainerView.trailingAnchor),
-            
-            menuView.topAnchor.constraint(equalTo: menuContainerView.topAnchor),
-            menuView.leadingAnchor.constraint(equalTo: menuContainerView.leadingAnchor),
-            menuView.bottomAnchor.constraint(equalTo: menuContainerView.bottomAnchor),
-            menuView.trailingAnchor.constraint(equalTo: menuContainerView.trailingAnchor),
-            
-            darkCoverView.topAnchor.constraint(equalTo: rightContainerView.topAnchor),
-            darkCoverView.leadingAnchor.constraint(equalTo: rightContainerView.leadingAnchor),
-            darkCoverView.bottomAnchor.constraint(equalTo: rightContainerView.bottomAnchor),
-            darkCoverView.trailingAnchor.constraint(equalTo: rightContainerView.trailingAnchor)
-        ])
+        menuView.anchor(
+            top: menuContainerView.topAnchor,
+            leading: menuContainerView.leadingAnchor,
+            bottom: menuContainerView.bottomAnchor,
+            trailing: menuContainerView.trailingAnchor
+        )
         
-        addChild(rightViewController!)
+        darkCoverView.anchor(
+            top: rightContainerView.topAnchor,
+            leading: rightContainerView.leadingAnchor,
+            bottom: rightContainerView.bottomAnchor,
+            trailing: rightContainerView.trailingAnchor
+        )
+    
+        addChild(rightViewController)
         addChild(menuVC)
     }
 }

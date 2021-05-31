@@ -32,19 +32,26 @@ class MenuVC: UIViewController {
         handler.setup(tableView)
     }
     
+    // MARK:- Create MenuItems 
     private func getMenuItems() ->[MenuItem] {
         var items = [MenuItem]()
         items.append(MenuItem(image: #imageLiteral(resourceName: "profile"), title: "Home",didSelectMenu: {
-            return HomeVC()
+            let nav = UINavigationController(rootViewController: HomeVC())
+            return nav
         }))
         items.append(MenuItem(image: #imageLiteral(resourceName: "moments"), title: "Lists",didSelectMenu: {
             return ListVC()
         }))
         items.append(MenuItem(image: #imageLiteral(resourceName: "bookmarks"), title: "BookMarks",didSelectMenu: {
-            return BookMarkVC()
+            let nav = UINavigationController(rootViewController: BookMarkVC())
+            return nav
         }))
         items.append(MenuItem(image: #imageLiteral(resourceName: "moments"), title: "Moments",didSelectMenu: {
-            return MomentsVC()
+            let tab = UITabBarController()
+            let nav = UINavigationController(rootViewController: MomentsVC())
+            nav.tabBarItem.title = "moment"
+            tab.viewControllers = [nav]
+            return tab
         }))
         return items
     }
