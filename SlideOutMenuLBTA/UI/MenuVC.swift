@@ -22,18 +22,31 @@ class MenuVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
-        for i in 1 ... 5 {
-            handler.indexData.append("menu Item row  \(i)")
-        }
+        handler.indexData = getMenuItems()
         tableView.reloadData()
-        
     }
     
     private func configureTableView() {
         view.addSubview(tableView)
         tableView.fillSuperview()
-        tableView.backgroundColor = .blue
         handler.setup(tableView)
+    }
+    
+    private func getMenuItems() ->[MenuItem] {
+        var items = [MenuItem]()
+        items.append(MenuItem(image: #imageLiteral(resourceName: "profile"), title: "Home",didSelectMenu: {
+            return HomeVC()
+        }))
+        items.append(MenuItem(image: #imageLiteral(resourceName: "moments"), title: "Lists",didSelectMenu: {
+            return ListVC()
+        }))
+        items.append(MenuItem(image: #imageLiteral(resourceName: "bookmarks"), title: "BookMarks",didSelectMenu: {
+            return BookMarkVC()
+        }))
+        items.append(MenuItem(image: #imageLiteral(resourceName: "moments"), title: "Moments",didSelectMenu: {
+            return MomentsVC()
+        }))
+        return items
     }
 }
 
@@ -41,12 +54,13 @@ class MenuVC: UIViewController {
 // MARK:- MenuHandler
 class MenuHandler: NSObject, UITableViewDataSource, UITableViewDelegate {
     
-    var indexData = [String]()
+    var indexData = [MenuItem]()
     
     func setup(_ tableView: UITableView) {
+        tableView.separatorStyle = .none
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(ItemMenuCell.self, forCellReuseIdentifier: "cell")
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -54,10 +68,30 @@ class MenuHandler: NSObject, UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-        cell.textLabel?.text = indexData[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ItemMenuCell
+        cell.menuItem = indexData[indexPath.row]
         return cell
     }
     
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let customMenuHeader = CustomMenuHeaderView()
+        return customMenuHeader
+    }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 230
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let baseSlidingVC = UIApplication.shared.windows.filter { $0.isKeyWindow
+        }.first?.rootViewController as? BaseSlidingVC
+        let vc = indexData[indexPath.row].didSelectMenu()
+        baseSlidingVC?.didSelectMenuItem(at: indexPath,vc: vc)
+    }
+}
+
+struct MenuItem {
+    let image: UIImage
+    let title: String
+    let didSelectMenu:(()-> UIViewController?)
 }

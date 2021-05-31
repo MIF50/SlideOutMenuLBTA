@@ -16,13 +16,10 @@ class HomeVC: UIViewController {
         return view
     }()
     
+    private let darkCoverView = UIView()
+    
     // MARK:- Handler
     private let handler = HomeHandler()
-    
-    // MARK:- MenuVC
-    private let menuVC = MenuVC()
-    private let menuWidth: CGFloat = 300
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,49 +27,26 @@ class HomeVC: UIViewController {
         configureNavigationItems()
     }
     
-    private func configureTableView() {
+    @objc private func didTapOpen() {
+      
+    }
+    
+    @objc private func didTapHide() {
+        
+    }
+    
+    // MARK:- Private Method
+    fileprivate func configureTableView() {
         view.addSubview(tableView)
         tableView.fillSuperview()
         tableView.backgroundColor = .red
         handler.setup(tableView)
     }
     
-    private func configureNavigationItems() {
+    fileprivate func configureNavigationItems() {
         navigationItem.title = "Home"
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Open", style: .plain, target: self, action: #selector(didTapOpen))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Hide", style: .plain, target: self, action: #selector(didTapHide))
-    }
-    
-    @objc private func didTapOpen() {
-        
-        menuVC.view.frame = CGRect(x: -menuWidth, y: 0, width: menuWidth, height: view.frame.height)
-        let mainWindow = UIApplication.shared.windows.filter { $0.isKeyWindow }.first
-        mainWindow?.addSubview(menuVC.view)
-        addChild(menuVC)
-        
-        UIView.animate(
-            withDuration: 0.5,
-            delay: 0,
-            usingSpringWithDamping: 1,
-            initialSpringVelocity: 1, options: .curveEaseOut) {
-            self.menuVC.view.transform = CGAffineTransform(translationX: self.menuWidth, y: 0)
-        }
-
-        
-    }
-    
-    @objc private func didTapHide() {
-        UIView.animate(
-            withDuration: 0.5,
-            delay: 0,
-            usingSpringWithDamping: 1,
-            initialSpringVelocity: 1,
-            options: .curveEaseOut) {
-            self.menuVC.view.transform = .identity
-        } completion: { finished in
-            self.menuVC.view.removeFromSuperview()
-            self.menuVC.removeFromParent()
-        }
     }
 }
 
@@ -93,7 +67,5 @@ class HomeHandler: NSObject, UITableViewDataSource,UITableViewDelegate {
         cell.textLabel?.text = "Row: \(indexPath.row)"
         return cell
     }
-    
-    
 }
 
