@@ -15,9 +15,7 @@ class HomeVC: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
-    private let darkCoverView = UIView()
-    
+        
     // MARK:- Handler
     private let handler = HomeHandler()
     
@@ -66,7 +64,7 @@ class HomeHandler: NSObject, UITableViewDataSource,UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = "Row: \(indexPath.row)"
         return cell
     }

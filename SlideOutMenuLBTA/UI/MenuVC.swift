@@ -93,12 +93,12 @@ class MenuHandler: NSObject, UITableViewDataSource, UITableViewDelegate {
         let baseSlidingVC = UIApplication.shared.windows.filter { $0.isKeyWindow
         }.first?.rootViewController as? BaseSlidingVC
         let vc = indexData[indexPath.row].didSelectMenu()
-        baseSlidingVC?.didSelectMenuItem(at: indexPath,vc: vc)
+        baseSlidingVC?.didSelectMenuItem(vc: vc)
     }
 }
 
 struct MenuItem {
     let image: UIImage
     let title: String
-    let didSelectMenu:(()-> UIViewController?)
+    let didSelectMenu:(()-> UIViewController)
 }

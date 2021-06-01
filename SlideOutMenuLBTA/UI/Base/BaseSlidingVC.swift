@@ -43,11 +43,11 @@ class BaseSlidingVC: UIViewController {
     fileprivate let menuWidth:CGFloat = 300
     fileprivate let thresholdVelocity:CGFloat = 500
     
-    fileprivate var rightViewController: UIViewController = UINavigationController(rootViewController: HomeVC())
-    
+    fileprivate var rightVC: UIViewController = UINavigationController(rootViewController: HomeVC())
+    fileprivate let menuVC = ChatRoomMenuVC()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         configureView()
         configureViewControllers()
         configurePanGesture()
@@ -58,7 +58,7 @@ class BaseSlidingVC: UIViewController {
         hideMenu()
     }
     
-    @objc private func handlePane(gesture: UIPanGestureRecognizer) {
+    @objc private func handlePan(gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: view)
         var x = translation.x
         x = isMenuOpen ? x + menuWidth : x
@@ -105,6 +105,7 @@ class BaseSlidingVC: UIViewController {
         leadingAnchorRightView.constant = menuWidth
         trailingAnchorRightView.constant = menuWidth
         performAnimations()
+        setNeedsStatusBarAppearanceUpdate()
     }
     
     func hideMenu() {
@@ -112,24 +113,25 @@ class BaseSlidingVC: UIViewController {
         leadingAnchorRightView.constant = 0
         trailingAnchorRightView.constant = 0
         performAnimations()
+        setNeedsStatusBarAppearanceUpdate()
     }
     
-    func didSelectMenuItem(at indexPath: IndexPath,vc: UIViewController?) {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return isMenuOpen ? .lightContent : .default
+    }
+    
+    func didSelectMenuItem(vc: UIViewController) {
         performRightViewCleanUp()
         hideMenu()
-        
-        if let vc = vc {
-            rightViewController = vc
-            rightContainerView.addSubview(rightViewController.view)
-            addChild(rightViewController)
-            
-        }
+        rightVC = vc
+        rightContainerView.addSubview(rightVC.view)
+        addChild(rightVC)
         rightContainerView.bringSubviewToFront(darkCoverView)
     }
     
     private func performRightViewCleanUp() {
-        rightViewController.view.removeFromSuperview()
-        rightViewController.removeFromParent()
+        rightVC.view.removeFromSuperview()
+        rightVC.removeFromParent()
     }
     
     fileprivate func performAnimations() {
@@ -159,26 +161,15 @@ class BaseSlidingVC: UIViewController {
             menuContainerView.bottomAnchor.constraint(equalTo: rightContainerView.bottomAnchor)
             
         ])
-        leadingAnchorRightView = rightContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 0)
+        leadingAnchorRightView = rightContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         leadingAnchorRightView.isActive = true
         trailingAnchorRightView = rightContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         trailingAnchorRightView.isActive = true
     }
     
-    fileprivate func configurePanGesture() {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePane))
-        view.addGestureRecognizer(panGesture)
-    }
-    
-    fileprivate func configureTapGesture() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapDismiss))
-        darkCoverView.addGestureRecognizer(tapGesture)
-    }
-    
     fileprivate func configureViewControllers() {
-        let menuVC = MenuVC()
         
-        let homeView = rightViewController.view!
+        let homeView = rightVC.view!
         let menuView = menuVC.view!
                 
         rightContainerView.addSubview(homeView)
@@ -206,7 +197,17 @@ class BaseSlidingVC: UIViewController {
             trailing: rightContainerView.trailingAnchor
         )
     
-        addChild(rightViewController)
+        addChild(rightVC)
         addChild(menuVC)
+    }
+    
+    fileprivate func configurePanGesture() {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        view.addGestureRecognizer(panGesture)
+    }
+    
+    fileprivate func configureTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapDismiss))
+        darkCoverView.addGestureRecognizer(tapGesture)
     }
 }
