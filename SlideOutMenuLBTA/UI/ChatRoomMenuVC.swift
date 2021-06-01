@@ -9,6 +9,8 @@ import UIKit
 
 class ChatRoomMenuVC: UIViewController {
     
+    private var filterSearch: [ChatRoom] = ChatRoom.getChats()
+    
     // MARK:- Views
     private let tableView: UITableView = {
         let table = UITableView()
@@ -21,7 +23,6 @@ class ChatRoomMenuVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
-        
     }
     
     private func configureTableView() {
@@ -29,6 +30,22 @@ class ChatRoomMenuVC: UIViewController {
         tableView.fillSuperview()
         handler.setup(tableView)
         handler.indexData = ChatRoom.getChats()
+        tableView.reloadData()
+    }
+}
+
+// MARK:- SearchContainerViewDeleage
+extension ChatRoomMenuVC: SearchContainerViewDelegate {
+    
+    func onSearch(query: String) {
+        filterSearch = ChatRoom.search(query: query)
+        handler.indexData = filterSearch
+        tableView.reloadData()
+    }
+    
+    func onClear() {
+        filterSearch = ChatRoom.getChats()
+        handler.indexData = filterSearch
         tableView.reloadData()
     }
 }
@@ -54,6 +71,7 @@ class ChatRoomHandler: NSObject, UITableViewDataSource, UITableViewDelegate {
         let header = ChatHeaderLabel()
         header.text = indexData[section].title
         header.textColor = #colorLiteral(red: 0.5872890515, green: 0.5515661953, blue: 0.5, alpha: 1)
+        header.backgroundColor = #colorLiteral(red: 0.2980392157, green: 0.2078431373, blue: 0.2862745098, alpha: 1)
         return header
     }
     
@@ -77,6 +95,7 @@ class ChatRoomHandler: NSObject, UITableViewDataSource, UITableViewDelegate {
     }
 }
 
+// MARK:- ChatRoomMenuCell
 class ChatRoomMenuCell: UITableViewCell {
     
     var text: String! {
@@ -127,6 +146,7 @@ class ChatRoomMenuCell: UITableViewCell {
     }
 }
 
+// MARK:- ChatHeaderLabel
 class ChatHeaderLabel: UILabel {
     
     override func drawText(in rect: CGRect) {
@@ -138,12 +158,19 @@ struct ChatRoom {
     let title: String
     let items: [String]
     
-    
     static func getChats() -> [ChatRoom] {
         var chats = [ChatRoom]()
         chats.append(ChatRoom(title: "UNREADS", items: ["general","introductions"]))
         chats.append(ChatRoom(title: "CHANNELS", items: ["jobs"]))
         chats.append(ChatRoom(title: "DIRECT MESSAGES", items: ["Brain Voong","Steve Jobs","Tim cock","Barack Obama"]))
         return chats
+    }
+    
+    static func search(query: String) -> [ChatRoom] {
+        return getChats().map { ChatRoom(title: $0.title, items: $0.filter(item: query)) }
+    }
+    
+    func filter(item: String)-> [String] {
+        return items.filter { $0.lowercased().contains(item.lowercased()) }
     }
 }

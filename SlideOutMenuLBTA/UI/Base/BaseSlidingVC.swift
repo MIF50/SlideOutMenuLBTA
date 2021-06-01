@@ -44,7 +44,7 @@ class BaseSlidingVC: UIViewController {
     fileprivate let thresholdVelocity:CGFloat = 500
     
     fileprivate var rightVC: UIViewController = UINavigationController(rootViewController: HomeVC())
-    fileprivate let menuVC = ChatRoomMenuVC()
+    fileprivate let menuVC = ChatRoomMenuContainerVC()
 
     override func viewDidLoad() {
         super.viewDidLoad()

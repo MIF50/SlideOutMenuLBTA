@@ -12,6 +12,7 @@
 		042369412663CB5D009DC27D /* UIView+Stacking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042369402663CB5D009DC27D /* UIView+Stacking.swift */; };
 		042369432663D27E009DC27D /* SpaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042369422663D27E009DC27D /* SpaceView.swift */; };
 		0434917F2665DF1F00434C73 /* ChatRoomMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434917E2665DF1F00434C73 /* ChatRoomMenuVC.swift */; };
+		0440718E26660A0D001720E9 /* ChatRoomMenuContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0440718D26660A0D001720E9 /* ChatRoomMenuContainerVC.swift */; };
 		044DB9222662215500D0297E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044DB9212662215500D0297E /* AppDelegate.swift */; };
 		044DB9242662215500D0297E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044DB9232662215500D0297E /* SceneDelegate.swift */; };
 		044DB9262662215500D0297E /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044DB9252662215500D0297E /* HomeVC.swift */; };
@@ -32,6 +33,7 @@
 		042369402663CB5D009DC27D /* UIView+Stacking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Stacking.swift"; sourceTree = "<group>"; };
 		042369422663D27E009DC27D /* SpaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceView.swift; sourceTree = "<group>"; };
 		0434917E2665DF1F00434C73 /* ChatRoomMenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomMenuVC.swift; sourceTree = "<group>"; };
+		0440718D26660A0D001720E9 /* ChatRoomMenuContainerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomMenuContainerVC.swift; sourceTree = "<group>"; };
 		044DB91E2662215500D0297E /* SlideOutMenuLBTA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SlideOutMenuLBTA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		044DB9212662215500D0297E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		044DB9232662215500D0297E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				04A8CC2D2664A60B00C6AAF3 /* BookMarkVC.swift */,
 				04A8CC2F2664A63900C6AAF3 /* MomentsVC.swift */,
 				0434917E2665DF1F00434C73 /* ChatRoomMenuVC.swift */,
+				0440718D26660A0D001720E9 /* ChatRoomMenuContainerVC.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -228,6 +231,7 @@
 				04A8CC2E2664A60B00C6AAF3 /* BookMarkVC.swift in Sources */,
 				044DB9222662215500D0297E /* AppDelegate.swift in Sources */,
 				042369432663D27E009DC27D /* SpaceView.swift in Sources */,
+				0440718E26660A0D001720E9 /* ChatRoomMenuContainerVC.swift in Sources */,
 				044DB9242662215500D0297E /* SceneDelegate.swift in Sources */,
 				04A8CC302664A63900C6AAF3 /* MomentsVC.swift in Sources */,
 				044DB93B26622E8100D0297E /* MenuVC.swift in Sources */,
