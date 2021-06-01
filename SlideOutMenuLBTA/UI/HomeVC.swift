@@ -15,6 +15,15 @@ class HomeVC: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    private let navButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.clipsToBounds = true
+        btn.size(width: 40, height: 40)
+        btn.layer.cornerRadius = 20
+        btn.imageView?.contentMode = .scaleAspectFit
+        return btn
+    }()
         
     // MARK:- Handler
     private let handler = HomeHandler()
@@ -46,7 +55,9 @@ class HomeVC: UIViewController {
     
     fileprivate func configureNavigationItems() {
         navigationItem.title = "Home"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Open", style: .plain, target: self, action: #selector(didTapOpen))
+        navButton.addTarget(self, action: #selector(didTapOpen), for: .touchUpInside)
+        navButton.setBackgroundImage(UIImage(named: "girl_profile"), for: .normal)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Hide", style: .plain, target: self, action: #selector(didTapHide))
     }
 }
@@ -59,6 +70,7 @@ class HomeHandler: NSObject, UITableViewDataSource,UITableViewDelegate {
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 5
     }
