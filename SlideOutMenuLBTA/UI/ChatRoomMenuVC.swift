@@ -9,8 +9,7 @@ import UIKit
 
 class ChatRoomMenuVC: UIViewController {
     
-    private var filterSearch: [ChatRoom] = ChatRoom.getChats()
-    
+
     // MARK:- Views
     private let tableView: UITableView = {
         let table = UITableView()
@@ -19,6 +18,9 @@ class ChatRoomMenuVC: UIViewController {
     
     // MARK:- Handler
     private let handler = ChatRoomHandler()
+    
+    private var filterSearch: [ChatRoom] = ChatRoom.getChats()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()

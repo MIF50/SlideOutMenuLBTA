@@ -15,7 +15,7 @@ class ItemMenuCell: UITableViewCell {
             menuLable.text = menuItem.title
         }
     }
-    
+    // MARK:- Views
     let icon: UIImageView = {
        let image = UIImageView()
         image.contentMode = .scaleAspectFit

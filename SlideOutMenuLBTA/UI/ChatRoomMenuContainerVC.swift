@@ -49,13 +49,6 @@ class ChatRoomMenuContainerVC: UIViewController {
 class SearchContainerView: UIView, UISearchBarDelegate {
     
     // MARK:- Views
-    private let searchBar: UISearchBar = {
-        let search = UISearchBar()
-        search.setup(background: #colorLiteral(red: 0.4322252143, green: 0.2816649512, blue: 0.3725126183, alpha: 1), inputText: UIColor.white, placeholderText: UIColor.gray, image: UIColor.gray)
-        search.placeholder = "Enter your filter"
-        return search
-    }()
-    
     private let imageSearch: UIImageView = {
         let image = UIImageView()
         image.image = #imageLiteral(resourceName: "rocket")
@@ -63,6 +56,13 @@ class SearchContainerView: UIView, UISearchBarDelegate {
         image.clipsToBounds = true
         image.layer.cornerRadius = 8
         return image
+    }()
+    
+    private let searchBar: UISearchBar = {
+        let search = UISearchBar()
+        search.setup(background: #colorLiteral(red: 0.4322252143, green: 0.2816649512, blue: 0.3725126183, alpha: 1), inputText: UIColor.white, placeholderText: UIColor.gray, image: UIColor.gray)
+        search.placeholder = "Enter your filter"
+        return search
     }()
     
     // MARK:- Delegaet
